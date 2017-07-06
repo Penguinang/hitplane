@@ -12,10 +12,16 @@ public class attackingenemy : MonoBehaviour {
 
 	void Start () {
 		InvokeRepeating ("shoot", 1, 1.5f);
+		GetComponent<Rigidbody2D> ().velocity = new Vector3 (0,-1,0);
 	}
 	
 	// Update is called once per frame
 	void Update () {	
+
+	}
+
+	void FixedUpdate()
+	{
 		float dirx;	
 		planeposition = afactory.getplayer ().transform.position;
 		if (Mathf.Abs (planeposition.x - transform.position.x) <= 0.3)
@@ -23,11 +29,7 @@ public class attackingenemy : MonoBehaviour {
 		else {
 			dirx = Mathf.Sign (planeposition.x - transform.position.x);
 		}
-		transform.position = new Vector3 (
-			transform.position.x + dirx*Speedx,
-			transform.position.y - Time.deltaTime * Speedy,
-			transform.position.z
-		);
+		GetComponent<Rigidbody2D> ().AddForce (new Vector3(dirx*0.5f,0,0));
 	}
 
 	void shoot()

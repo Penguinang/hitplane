@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 // 工厂模式
@@ -44,6 +45,8 @@ public class PlayerBFactory:PlayerFactory
 {
 	public override GameObject getplayer()
 	{
+		var a = FindObjectsOfType<NetworkManager>();
+		var b = new NetworkManager ();
 		return player = player == null ? Instantiate (prefabpb) : player;
 	}
 }

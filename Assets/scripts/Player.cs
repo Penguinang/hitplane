@@ -15,6 +15,11 @@ public class Player : MonoBehaviour {
 	public GameObject GunPosition = null;
 	public state currentstate = state.NORMAL;
 
+	void Awake()
+	{
+		
+	}
+
 	void Start () {
 	
 	}
