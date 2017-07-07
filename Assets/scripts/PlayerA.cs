@@ -8,9 +8,5 @@ public class PlayerA : Player
 	
 	}
 
-	override public void shoot()
-	{
-		Instantiate (bullet, GunPosition.transform.position, bullet.transform.rotation);
-	}
 }
 

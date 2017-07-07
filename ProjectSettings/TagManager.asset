@@ -7,6 +7,10 @@ TagManager:
   - enemybullet
   - playerbullet
   - enemybody
+  - player
+  - serverplayer
+  - clientplayer
+  - virtualplayer
   layers:
   - Default
   - TransparentFX

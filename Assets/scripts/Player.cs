@@ -1,17 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour {
+public class Player : NetworkBehaviour {
 
 	public int Health = 100;
-	public float Speedx = 1;
-	public float Speedy = 1;
-	public float Minx = 0, Maxx = 0;
-	public float Miny = 0, Maxy = 0;
-
-	public float ReloadDelay = 3f;
-	public GameObject bullet = null;
+	public float ReloadDelay = 5f;
+	public GameObject bulletPrefab = null;
 	public GameObject GunPosition = null;
 	public state currentstate = state.NORMAL;
 
@@ -25,14 +21,7 @@ public class Player : MonoBehaviour {
 	}
 
 	void Update () {
-		float x = Input.GetAxis("Horizontal");
-		float y = Input.GetAxis ("Vertical");
-		transform.position = new Vector3 (
-			Mathf.Clamp(transform.position.x + x * Time.deltaTime*Speedx,Minx,Maxx),
-			Mathf.Clamp(transform.position.y + y * Time.deltaTime*Speedy,Miny,Maxy),
-			transform.position.z
-		);
-
+		
 	}
 	void LateUpdate(){
 		bool fire = Input.GetButton ("Fire1");
@@ -67,8 +56,20 @@ public class Player : MonoBehaviour {
 		trychangestate (operation.TIMESKILL);
 	}
 
-	virtual public void shoot ()
-	{}
+	[Command]
+	void Cmdshoot()
+	{
+		var bullet = (GameObject)Instantiate(
+			bulletPrefab,
+			GunPosition.transform.position,
+			GunPosition.transform.rotation);
+		
+		bullet.GetComponent<Rigidbody2D>().velocity = bullet.transform.forward * 6;
+
+		NetworkServer.Spawn(bullet);
+		print ("shoot");
+		Destroy(bullet, 2.0f);        
+	}
 
 	public Vector3 getposition()
 	{
@@ -132,7 +133,7 @@ public class Player : MonoBehaviour {
 			print ("\ncurrentstate changed to" + currentstate);
 			switch (command) {
 			case operation.FIRE:
-				shoot ();
+				Cmdshoot ();
 				Invoke ("ActivateWeapons", ReloadDelay);
 				break;
 			case operation.SKILL:

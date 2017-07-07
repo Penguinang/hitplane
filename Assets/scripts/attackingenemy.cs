@@ -23,7 +23,7 @@ public class attackingenemy : MonoBehaviour {
 	void FixedUpdate()
 	{
 		float dirx;	
-		planeposition = afactory.getplayer ().transform.position;
+		planeposition = afactory.getlocalplayer ().transform.position;
 		if (Mathf.Abs (planeposition.x - transform.position.x) <= 0.3)
 			dirx = 0;
 		else {

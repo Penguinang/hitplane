@@ -22,10 +22,10 @@ GameObject:
   - component: {fileID: 212123241708273898}
   - component: {fileID: 50530780484281054}
   - component: {fileID: 60888779993697008}
-  - component: {fileID: 114430872102241144}
+  - component: {fileID: 114739191220362618}
   m_Layer: 0
   m_Name: spaceship
-  m_TagString: Untagged
+  m_TagString: player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -135,7 +135,7 @@ PolygonCollider2D:
       - {x: 0.32, y: -0.114999995}
       - {x: 0.38, y: -0.085}
       - {x: 0.38, y: 0.085}
---- !u!114 &114430872102241144
+--- !u!114 &114739191220362618
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -143,20 +143,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 1583116106061604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 761e3e955b5b54626b7cbcd644389631, type: 3}
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 100
-  Speedx: 3
-  Speedy: 2
-  Minx: -4
-  Maxx: 4
-  Miny: -4
-  Maxy: 2
-  ReloadDelay: 0.2
-  bullet: {fileID: 1649960058330066, guid: 06531ac1d17bd406683f0135e7400fb0, type: 2}
-  GunPosition: {fileID: 1935909750598550}
-  currentstate: 0
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 100
+    i1: 85
+    i2: 62
+    i3: 129
+    i4: 9
+    i5: 193
+    i6: 164
+    i7: 56
+    i8: 248
+    i9: 245
+    i10: 67
+    i11: 137
+    i12: 238
+    i13: 122
+    i14: 51
+    i15: 141
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!212 &212123241708273898
 SpriteRenderer:
   m_ObjectHideFlags: 1

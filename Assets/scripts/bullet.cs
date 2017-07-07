@@ -27,7 +27,6 @@ public class bullet : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider)
 	{
-		print ("bullet trigger");
 	}
 
 	
