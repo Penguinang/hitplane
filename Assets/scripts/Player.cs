@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class Player : NetworkBehaviour {
 
-	public int Health = 100;
 	public float ReloadDelay = 5f;
 	public float Speedx = 4;
 	public float Speedy = 1;
@@ -15,6 +14,7 @@ public class Player : NetworkBehaviour {
 	public GameObject bulletPrefab = null;
 	public GameObject GunPosition = null;
 	public state currentstate = state.NORMAL;
+	public AbstractPlayer abstractplayer;
 
 	void Awake()
 	{
@@ -22,11 +22,17 @@ public class Player : NetworkBehaviour {
 	}
 
 	void Start () {
-	
+		abstractplayer = new PlayerA ();
+		abstractplayer.Init ();
 	}
 
 	void Update () {
-		
+		if (!isLocalPlayer)
+			return;
+		if (abstractplayer.health <= 0) {
+			Destroy (this.gameObject);
+			print ("gg");
+		}
 	}
 	void FixedUpdate()
 	{
@@ -46,20 +52,20 @@ public class Player : NetworkBehaviour {
 	}
 	void OnTriggerEnter2D(Collider2D collider)
 	{
-		if (collider.gameObject.tag == "enemybullet") 
-		{
-			Health -= 10;
-			Destroy (collider.gameObject);
-			if (Health <= 0)
-				Destroy (this.gameObject);
-		} 
-		else if (collider.gameObject.tag == "enemybody") 
-		{
-			Health -= 20;
-			if (Health <= 0)
-				Destroy (this.gameObject);
-
-		}
+//		if (collider.gameObject.tag == "enemybullet") 
+//		{
+//			Health -= 10;
+//			Destroy (collider.gameObject);
+//			if (Health <= 0)
+//				Destroy (this.gameObject);
+//		} 
+//		else if (collider.gameObject.tag == "enemybody") 
+//		{
+//			Health -= 20;
+//			if (Health <= 0)
+//				Destroy (this.gameObject);
+//
+//		}
 			
 	}
 	void ActivateWeapons(){
@@ -81,7 +87,6 @@ public class Player : NetworkBehaviour {
 		bullet.GetComponent<Rigidbody2D>().velocity = bullet.transform.forward * 6;
 
 		NetworkServer.Spawn(bullet);
-		print ("shoot");
 		Destroy(bullet, 2.0f);        
 	}
 

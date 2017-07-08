@@ -84,12 +84,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myplayer: {fileID: 0}
-  Speedx: 1
-  Speedy: 1
-  Minx: -10
-  Maxx: 10
-  Miny: -10
-  Maxy: 10
+  enemyPrefab: {fileID: 1299763004406278, guid: 44cdfc9d5e2144ed983b598cac44e764,
+    type: 2}
 --- !u!114 &114683425764191996
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -101,8 +97,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e69347d911a34ad989e12416118a660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 100
   ReloadDelay: 5
+  Speedx: 4
+  Speedy: 1
+  Minx: -10
+  Maxx: 10
+  Miny: -10
+  Maxy: 10
   bulletPrefab: {fileID: 1649960058330066, guid: 06531ac1d17bd406683f0135e7400fb0,
     type: 2}
   GunPosition: {fileID: 1909549070795164}

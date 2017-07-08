@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class playercontroller : NetworkBehaviour {
 
 	public GameObject myplayer;
+	public GameObject enemyPrefab;
 
 	void Start () {		
 		myplayer = this.gameObject;
@@ -76,9 +77,10 @@ public class playercontroller : NetworkBehaviour {
 
 	public override void OnStartServer()
 	{
-		GameObject gamemanager = GameObject.FindGameObjectWithTag ("enemymanager");
-		if (gamemanager)
-			gamemanager.GetComponent<enemymanager> ().Activate ();
+		GameObject enemymanager = GameObject.FindGameObjectWithTag ("enemymanager");
+		if (enemymanager) {
+			enemymanager.GetComponent<enemymanager> ().Activate ();
+		}
 	}
 
 

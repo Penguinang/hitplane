@@ -6,12 +6,12 @@ TagManager:
   tags:
   - enemybullet
   - playerbullet
-  - enemybody
   - player
   - serverplayer
   - clientplayer
   - virtualplayer
   - enemymanager
+  - enemy
   layers:
   - Default
   - TransparentFX

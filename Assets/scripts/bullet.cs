@@ -27,6 +27,14 @@ public class bullet : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider)
 	{
+		//这里遇到了接口的问题，抽象类不能作为此处的模板，所以抽象类只能是这里模板的一个成员
+		if (gameObject.tag == "enemybullet" && collider.gameObject.tag == "player") {
+			collider.transform.parent.GetComponent<Player> ().abstractplayer.TakeDamage ();
+			Destroy (gameObject);
+		} else if (gameObject.tag == "playerbullet" && collider.gameObject.tag == "enemy") {
+			collider.GetComponent<Enemy> ().abstractenemy.TakeDamage ();
+			Destroy (gameObject);
+		}		
 	}
 
 	
