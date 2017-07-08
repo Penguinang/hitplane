@@ -55,6 +55,7 @@
      <Compile Include="Assets\scripts\bgscroll.cs" />
      <Compile Include="Assets\scripts\bullet.cs" />
      <Compile Include="Assets\scripts\EnemyController.cs" />
+     <Compile Include="Assets\scripts\enemymanager.cs" />
      <Compile Include="Assets\scripts\lanmode.cs" />
      <Compile Include="Assets\scripts\oneplayer.cs" />
      <Compile Include="Assets\scripts\Player.cs" />

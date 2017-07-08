@@ -46,20 +46,20 @@ public class PlayerFactory:NetworkBehaviour
 	public GameObject prefaba1, prefabb1;
 
 	public virtual GameObject getlocalplayer()
-	{return null;}
+	{return localplayer;}
 	public virtual GameObject getremoteplayer()
-	{return null;}
+	{return remoteplayer;}
 }
 
 public class PlayerAFactory:PlayerFactory
 {
 	public override GameObject getlocalplayer()
 	{
-		return localplayer = localplayer == null ? Instantiate (prefabpa) : localplayer;
+		return  PlayerFactory.localplayer = PlayerFactory.localplayer == null ? Instantiate (prefabpa) : PlayerFactory.localplayer;
 	}
 	public override GameObject getremoteplayer()
 	{
-		return remoteplayer = remoteplayer == null ? Instantiate (prefabpa) : remoteplayer;
+		return  PlayerFactory.remoteplayer =  PlayerFactory.remoteplayer == null ? Instantiate (prefabpa) :  PlayerFactory.remoteplayer;
 	}
 
 }

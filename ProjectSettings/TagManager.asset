@@ -11,6 +11,7 @@ TagManager:
   - serverplayer
   - clientplayer
   - virtualplayer
+  - enemymanager
   layers:
   - Default
   - TransparentFX

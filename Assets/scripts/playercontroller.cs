@@ -7,11 +7,6 @@ public class playercontroller : NetworkBehaviour {
 
 	public GameObject myplayer;
 
-	public float Speedx = 1;
-	public float Speedy = 1;
-	public float Minx = -10.0f, Maxx = 10.0f;
-	public float Miny = -10.0f, Maxy = 10.0f;
-
 	void Start () {		
 		myplayer = this.gameObject;
 
@@ -24,39 +19,28 @@ public class playercontroller : NetworkBehaviour {
 		} else {
 			Cmdcreateclientplayer ();
 		}
+
 	}
 
 	void Update () {
 
-		if (!isLocalPlayer)
-			return;
-		float x = Input.GetAxis("Horizontal");
-		float y = Input.GetAxis ("Vertical");
-		transform.position = new Vector3 (
-			Mathf.Clamp(transform.position.x + x * Time.deltaTime*Speedx,Minx,Maxx),
-			Mathf.Clamp(transform.position.y + y * Time.deltaTime*Speedy,Miny,Maxy),
-			transform.position.z
-		);
 	}
 
 	void createserverplayer()
 	{
 		PlayerAFactory factory = new PlayerAFactory();
 		GameObject player = factory.getlocalplayer ();
-		player.tag = "serverplayer";
 		myplayer = player;
-		myplayer.transform.parent = transform;
-		myplayer.transform.position = new Vector3 (0,0,0);
+		player.transform.parent = transform;
+		player.transform.position = new Vector3 (0,0,0);
 		NetworkServer.Spawn (player);
 	}
 
 	[Command]
 	void Cmdcreateclientplayer()
 	{
-		PlayerAFactory factory = new PlayerAFactory();
-		GameObject player = factory.getremoteplayer ();
-		player.tag = "clientplayer";
-		GameObject[] virtualplayers= GameObject.FindGameObjectsWithTag ("virtualplayer");
+		PlayerAFactory afactory = new PlayerAFactory();
+		GameObject player = afactory.getremoteplayer ();
 		player.transform.parent = transform;
 		player.transform.position = new Vector3 (0, 0, 0);
 		NetworkServer.Spawn (player);
@@ -72,14 +56,11 @@ public class playercontroller : NetworkBehaviour {
 		foreach(GameObject player in objects)
 		{
 			if (player.GetComponent<NetworkIdentity> ().netId == clientplayerid) {
-				player.tag = "clientplayer";
 				player.transform.parent = transform;
 				player.transform.position = new Vector3 (0, 0, 0);
 				myplayer = player;
 				PlayerFactory.setlocalplayer (player);
-				print ("markclientplayer");
 			} else {
-				player.tag = "serverplayer";				
 				GameObject[] virtualplayers = GameObject.FindGameObjectsWithTag("virtualplayer");
 				GameObject servervirtualplayer = virtualplayers [0];
 				if (servervirtualplayer == gameObject)
@@ -91,5 +72,14 @@ public class playercontroller : NetworkBehaviour {
 			}
 		}
 	}
+
+
+	public override void OnStartServer()
+	{
+		GameObject gamemanager = GameObject.FindGameObjectWithTag ("enemymanager");
+		if (gamemanager)
+			gamemanager.GetComponent<enemymanager> ().Activate ();
+	}
+
 
 }

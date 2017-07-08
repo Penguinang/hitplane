@@ -7,6 +7,11 @@ public class Player : NetworkBehaviour {
 
 	public int Health = 100;
 	public float ReloadDelay = 5f;
+	public float Speedx = 4;
+	public float Speedy = 1;
+	public float Minx = -10.0f, Maxx = 10.0f;
+	public float Miny = -10.0f, Maxy = 10.0f;
+
 	public GameObject bulletPrefab = null;
 	public GameObject GunPosition = null;
 	public state currentstate = state.NORMAL;
@@ -23,17 +28,27 @@ public class Player : NetworkBehaviour {
 	void Update () {
 		
 	}
-	void LateUpdate(){
+	void FixedUpdate()
+	{
+		if (!isLocalPlayer)
+			return;
 		bool fire = Input.GetButton ("Fire1");
 		if(fire)
 			trychangestate (operation.FIRE);
+
+		float x = Input.GetAxis("Horizontal");
+		float y = Input.GetAxis ("Vertical");
+		transform.position = new Vector3 (
+			Mathf.Clamp(transform.position.x + x * Time.deltaTime*Speedx,Minx,Maxx),
+			Mathf.Clamp(transform.position.y + y * Time.deltaTime*Speedy,Miny,Maxy),
+			transform.position.z
+		);
 	}
 	void OnTriggerEnter2D(Collider2D collider)
 	{
 		if (collider.gameObject.tag == "enemybullet") 
 		{
 			Health -= 10;
-			print ("plane get shot");
 			Destroy (collider.gameObject);
 			if (Health <= 0)
 				Destroy (this.gameObject);
@@ -41,7 +56,6 @@ public class Player : NetworkBehaviour {
 		else if (collider.gameObject.tag == "enemybody") 
 		{
 			Health -= 20;
-			print ("plane get enemyed");
 			if (Health <= 0)
 				Destroy (this.gameObject);
 
