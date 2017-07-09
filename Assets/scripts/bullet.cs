@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
-public class bullet : MonoBehaviour {
+public class bullet : NetworkBehaviour {
 
 	//移动的方向
 	public Vector3 Direction = Vector3.up;
@@ -9,18 +10,14 @@ public class bullet : MonoBehaviour {
 	public float Speed = 2.0f;
 	//lifetime in seconds
 	public float Lifetime = 10.0f;
-
+	public GameObject owner;
 	// Use this for initialization
 	void Start () {
-	
-		//destroys ammo in lifetime
 		Invoke ("DestroyMe", Lifetime);
-
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () {	
 		//以一定的速度改变子弹的移动位置
 		transform.position += Direction * Speed * Time.deltaTime;
 	}
@@ -34,6 +31,8 @@ public class bullet : MonoBehaviour {
 		} else if (gameObject.tag == "playerbullet" && collider.gameObject.tag == "enemy") {
 			collider.GetComponent<Enemy> ().abstractenemy.TakeDamage ();
 			Destroy (gameObject);
+			if (isServer)
+				owner.GetComponent<Player> ().getScore ();
 		}		
 	}
 

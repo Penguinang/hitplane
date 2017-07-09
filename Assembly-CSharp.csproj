@@ -63,6 +63,7 @@
      <Compile Include="Assets\scripts\Player.cs" />
      <Compile Include="Assets\scripts\playercontroller.cs" />
      <Compile Include="Assets\scripts\PlayerFactory.cs" />
+     <Compile Include="Assets\scripts\translatefunc.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/opt/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

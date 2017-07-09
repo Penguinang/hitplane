@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 //实现抽象类与接口，在每一个敌方飞机或我方飞机脚本类内部都有一个抽象飞机类，提供TakeDamage（），Init（）等接口
 abstract public class AbstractPlane
@@ -11,7 +12,9 @@ abstract public class AbstractPlane
 }
 
 abstract public class AbstractPlayer:AbstractPlane{
-
+	public AbstractPlayer()
+	{
+	}
 }
 
 public class PlayerA : AbstractPlayer

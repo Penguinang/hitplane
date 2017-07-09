@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,7 +15,17 @@ public class Player : NetworkBehaviour {
 	public GameObject bulletPrefab = null;
 	public GameObject GunPosition = null;
 	public state currentstate = state.NORMAL;
+
+	[SyncVar(hook = "UpdateHealth")]
+	int health;
+//
+//	[SyncVar(hook = "UpdateClientHealth")]
+//	int clientHealth;
+
 	public AbstractPlayer abstractplayer;
+
+	[SyncVar(hook="UpdateScore")]
+	public int score = 0;
 
 	void Awake()
 	{
@@ -27,13 +38,21 @@ public class Player : NetworkBehaviour {
 	}
 
 	void Update () {
-		if (!isLocalPlayer)
-			return;
-		if (abstractplayer.health <= 0) {
-			Destroy (this.gameObject);
-			print ("gg");
+		//如果使用接口，就要将Health放在抽象类里面，也就是Player的成员的成员
+		//如果想保持完全同步，就要蒋Health写在Player里面，作为Player的成员，使用Attribute[syncvar]
+		if(isServer)
+			health = abstractplayer.health;			
+		//此处本应将所有删除权限交给本机或交给服务器，但是似乎是客户端向服务器发送的有点慢，导致客户端玩家死后，服务器玩家无法消失
+		/*if (isLocalPlayer)*/if(isServer){		 	
+			if (abstractplayer.health <= 0)
+				Invoke ("die",0);
 		}
 	}
+	void die()
+	{
+		Destroy (this.gameObject);
+	}
+
 	void FixedUpdate()
 	{
 		if (!isLocalPlayer)
@@ -65,9 +84,32 @@ public class Player : NetworkBehaviour {
 //			if (Health <= 0)
 //				Destroy (this.gameObject);
 //
-//		}
-			
+//		}			
 	}
+
+	void UpdateScore(int score)
+	{
+		if(!isLocalPlayer)
+			GameObject.Find ("remotescore").GetComponent<Text> ().text = "Remote Score"+score;
+		else
+			GameObject.Find ("localscore").GetComponent<Text> ().text = "Local Score"+score;
+	}
+
+	void UpdateHealth(int health)
+	{
+		if (isLocalPlayer) {
+			GameObject.Find ("localhealth").GetComponent<Text> ().text = "LocalPlayer\n" + health;
+		}
+		else 
+			GameObject.Find ("remotehealth").GetComponent<Text> ().text = "RemotePlayer\n" + health;
+
+	}
+
+	public void getScore()
+	{
+		score += 10;
+	}
+
 	void ActivateWeapons(){
 		trychangestate (operation.TIMEXIANZHE);
 	}
@@ -87,7 +129,12 @@ public class Player : NetworkBehaviour {
 		bullet.GetComponent<Rigidbody2D>().velocity = bullet.transform.forward * 6;
 
 		NetworkServer.Spawn(bullet);
-		Destroy(bullet, 2.0f);        
+		Destroy(bullet, 2.0f);
+		//cmd 在服务器执行，
+		//因此可以只在服务器绑定子弹的Owner，只在服务器为玩家加分，用Syncvar同步到客户端，在每个端为每个飞机更新分数
+		//用cmd，
+		//只在服务器改变血量，用Syncvar同步，在客户端更新UI  × 因为血量所在的类没有绑定在玩家上，因此不能使用SyncVar
+		bullet.GetComponent<bullet>().owner = gameObject;
 	}
 
 	public Vector3 getposition()

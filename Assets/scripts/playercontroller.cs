@@ -7,9 +7,13 @@ public class playercontroller : NetworkBehaviour {
 
 	public GameObject myplayer;
 	public GameObject enemyPrefab;
+	public GameObject initPosition;
+	int playerSelection;
 
 	void Start () {		
 		myplayer = this.gameObject;
+
+		GameObject.Find("gameinformationcontainer").transform.GetChild(0).gameObject.SetActive(true);
 
 		if (!isLocalPlayer)
 		{
@@ -18,7 +22,9 @@ public class playercontroller : NetworkBehaviour {
 		if (isServer) {
 			createserverplayer ();
 		} else {
-			Cmdcreateclientplayer ();
+			playerSelection = GameObject.Find ("playerchoser").GetComponent<translatefunc> ().selectedIndex;
+			Cmdcreateclientplayer (playerSelection);
+			Destroy (GameObject.Find ("playerchoser"));
 		}
 
 	}
@@ -29,21 +35,55 @@ public class playercontroller : NetworkBehaviour {
 
 	void createserverplayer()
 	{
-		PlayerAFactory factory = new PlayerAFactory();
+		PlayerFactory factory;
+		playerSelection = GameObject.Find ("playerchoser").GetComponent<translatefunc> ().selectedIndex;
+		switch (playerSelection) {
+		case 0:
+			factory = new PlayerAFactory ();
+			break;
+		case 1:
+			factory = new PlayerBFactory ();
+			break;
+		case 2:
+			factory = new PlayerCFactory ();
+			break;
+		default:
+			print ("no suit plane,give you a playerA");
+			factory = new PlayerAFactory ();
+			break;
+		}
+		Destroy (GameObject.Find ("playerchoser"));
+
 		GameObject player = factory.getlocalplayer ();
 		myplayer = player;
 		player.transform.parent = transform;
-		player.transform.position = new Vector3 (0,0,0);
+		player.transform.position = transform.position;
 		NetworkServer.Spawn (player);
 	}
 
 	[Command]
-	void Cmdcreateclientplayer()
+	void Cmdcreateclientplayer(int selection)
 	{
-		PlayerAFactory afactory = new PlayerAFactory();
-		GameObject player = afactory.getremoteplayer ();
+		PlayerFactory factory;
+		switch (selection) {
+		case 0:
+			factory = new PlayerAFactory ();
+			break;
+		case 1:
+			factory = new PlayerBFactory ();
+			break;
+		case 2:
+			factory = new PlayerCFactory ();
+			break;
+		default:
+			print ("no suit plane,give you a playerA");
+			factory = new PlayerAFactory ();
+			break;
+		}
+
+		GameObject player = factory.getremoteplayer ();
 		player.transform.parent = transform;
-		player.transform.position = new Vector3 (0, 0, 0);
+		player.transform.position = transform.position;
 		NetworkServer.Spawn (player);
 		Rpcmarkclient (player.GetComponent<NetworkIdentity> ().netId);
 
@@ -58,7 +98,7 @@ public class playercontroller : NetworkBehaviour {
 		{
 			if (player.GetComponent<NetworkIdentity> ().netId == clientplayerid) {
 				player.transform.parent = transform;
-				player.transform.position = new Vector3 (0, 0, 0);
+				player.transform.position = transform.position;
 				myplayer = player;
 				PlayerFactory.setlocalplayer (player);
 			} else {
@@ -67,7 +107,7 @@ public class playercontroller : NetworkBehaviour {
 				if (servervirtualplayer == gameObject)
 					servervirtualplayer = virtualplayers [1];
 				player.transform.parent = servervirtualplayer.transform;
-				player.transform.position = new Vector3 (0, 0, 0);
+				player.transform.position = transform.position;
 				PlayerFactory.setremoteplayer (player);
 
 			}
