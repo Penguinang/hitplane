@@ -161,8 +161,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Direction: {x: 0, y: 1, z: 0}
-  Speed: 10
+  Speed: 20
   Lifetime: 10
+  owner: {fileID: 0}
 --- !u!212 &212670873944527390
 SpriteRenderer:
   m_ObjectHideFlags: 1

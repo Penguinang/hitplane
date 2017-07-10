@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class enemymanager :  NetworkBehaviour{
 	public GameObject enemyPrefab;
 	public Transform enemySpawnLocation;
+	public float spawnTime;
 	protected int enemyNumber = 0;
 
 	void Start () {
@@ -19,7 +20,7 @@ public class enemymanager :  NetworkBehaviour{
 	{
 		if (!isServer)
 			return;
-		InvokeRepeating ("spawnEnemy",1,7);
+		InvokeRepeating ("spawnEnemy",1,spawnTime);
 	}
 
 	void spawnEnemy()

@@ -30,6 +30,9 @@ public class bullet : NetworkBehaviour {
 			Destroy (gameObject);
 		} else if (gameObject.tag == "playerbullet" && collider.gameObject.tag == "enemy") {
 			collider.GetComponent<Enemy> ().abstractenemy.TakeDamage ();
+			ParticleSystem explode = Instantiate (collider.GetComponent<Enemy> ().explode);
+			explode.transform.position = collider.transform.position;
+			explode.Play ();
 			Destroy (gameObject);
 			if (isServer)
 				owner.GetComponent<Player> ().getScore ();

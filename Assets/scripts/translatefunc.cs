@@ -8,20 +8,12 @@ public class translatefunc : MonoBehaviour {
 	public RectTransform[] players;
 	public RectTransform selectedposition;
 
-	float playerDistance;
-	float[] distanceToSelected;
 	public int selectedIndex;
 	public bool dragging = false;
 
 	void Start () {
-		int num = players.Length;
-		//计算每个元素到选中位置的距离
-		distanceToSelected = new float[num];
-
-		playerDistance = Mathf.Abs (players [0].position.x - players [1].position.x);
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 
 		if (!dragging) { //如果目前没有在滑动

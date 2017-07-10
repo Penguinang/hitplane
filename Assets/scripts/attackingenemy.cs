@@ -11,14 +11,20 @@ public class attackingenemy : NetworkBehaviour {
 	public Vector3 localplaneposition,remoteplaneposition;
 	PlayerFactory factory = new PlayerFactory();
 
+
 	void Start () {
 		InvokeRepeating ("shoot", 1, 1.5f);
 		GetComponent<Rigidbody2D> ().velocity = new Vector3 (0,-1,0);
 	}
-	
-	// Update is called once per frame
+
 	void Update () {	
 
+	}
+
+	void OnTriggerEnter2D(Collider2D collider)
+	{
+		if (collider.gameObject.tag == "player")
+			collider.transform.parent.gameObject.GetComponent<Player> ().abstractplayer.kissByEnemy ();
 	}
 
 	void FixedUpdate()
@@ -28,7 +34,8 @@ public class attackingenemy : NetworkBehaviour {
 		//判断移动方向
 		float dirx;	
 		//判断本地玩家与远程玩家哪一个在水平距离近攻击哪个
-		localplaneposition = factory.getlocalplayer ().transform.position;
+		if(factory.getlocalplayer())
+			localplaneposition = factory.getlocalplayer ().transform.position;
 		Vector3 position = localplaneposition;
 		if (factory.getremoteplayer ()) {
 			remoteplaneposition = factory.getremoteplayer ().transform.position;

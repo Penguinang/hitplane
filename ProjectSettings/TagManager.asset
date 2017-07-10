@@ -12,6 +12,7 @@ TagManager:
   - virtualplayer
   - enemymanager
   - enemy
+  - gameinformation
   layers:
   - Default
   - TransparentFX

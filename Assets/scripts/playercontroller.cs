@@ -8,9 +8,10 @@ public class playercontroller : NetworkBehaviour {
 	public GameObject myplayer;
 	public GameObject enemyPrefab;
 	public GameObject initPosition;
-	int playerSelection;
+	public int playerSelection;
 
 	void Start () {		
+		GameObject.Find ("networkmanager").GetComponent<NetworkManagerHUD> ().showGUI = false;
 		myplayer = this.gameObject;
 
 		GameObject.Find("gameinformationcontainer").transform.GetChild(0).gameObject.SetActive(true);
@@ -20,11 +21,13 @@ public class playercontroller : NetworkBehaviour {
 			return;
 		}
 		if (isServer) {
+			playerSelection = GameObject.Find ("playerchoser").GetComponent<translatefunc> ().selectedIndex;
+			Destroy (GameObject.Find ("playerchoser"));
 			createserverplayer ();
 		} else {
 			playerSelection = GameObject.Find ("playerchoser").GetComponent<translatefunc> ().selectedIndex;
-			Cmdcreateclientplayer (playerSelection);
 			Destroy (GameObject.Find ("playerchoser"));
+			Cmdcreateclientplayer (playerSelection);
 		}
 
 	}
@@ -36,7 +39,6 @@ public class playercontroller : NetworkBehaviour {
 	void createserverplayer()
 	{
 		PlayerFactory factory;
-		playerSelection = GameObject.Find ("playerchoser").GetComponent<translatefunc> ().selectedIndex;
 		switch (playerSelection) {
 		case 0:
 			factory = new PlayerAFactory ();
@@ -52,7 +54,6 @@ public class playercontroller : NetworkBehaviour {
 			factory = new PlayerAFactory ();
 			break;
 		}
-		Destroy (GameObject.Find ("playerchoser"));
 
 		GameObject player = factory.getlocalplayer ();
 		myplayer = player;
@@ -65,7 +66,8 @@ public class playercontroller : NetworkBehaviour {
 	void Cmdcreateclientplayer(int selection)
 	{
 		PlayerFactory factory;
-		switch (selection) {
+		playerSelection = selection;
+		switch (playerSelection) {
 		case 0:
 			factory = new PlayerAFactory ();
 			break;
@@ -85,13 +87,19 @@ public class playercontroller : NetworkBehaviour {
 		player.transform.parent = transform;
 		player.transform.position = transform.position;
 		NetworkServer.Spawn (player);
-		Rpcmarkclient (player.GetComponent<NetworkIdentity> ().netId);
 
+		GameObject[] virtualplayers = GameObject.FindGameObjectsWithTag("virtualplayer");
+		GameObject servervirtualplayer = virtualplayers [0];
+		if (servervirtualplayer == gameObject)
+			servervirtualplayer = virtualplayers [1];
+		int serverPlayerSelection = servervirtualplayer.GetComponent<playercontroller> ().playerSelection;
+
+		Rpcmarkclient (player.GetComponent<NetworkIdentity> ().netId,serverPlayerSelection);
 	}
 
 	//通知客户端哪一个是客户端玩家
 	[ClientRpc]
-	void Rpcmarkclient(NetworkInstanceId clientplayerid)
+	void Rpcmarkclient(NetworkInstanceId clientplayerid,int serverPlayerSelection)
 	{
 		GameObject[] objects = GameObject.FindGameObjectsWithTag ("player");
 		foreach(GameObject player in objects)
@@ -108,6 +116,7 @@ public class playercontroller : NetworkBehaviour {
 					servervirtualplayer = virtualplayers [1];
 				player.transform.parent = servervirtualplayer.transform;
 				player.transform.position = transform.position;
+				servervirtualplayer.GetComponent<playercontroller> ().playerSelection = serverPlayerSelection;
 				PlayerFactory.setremoteplayer (player);
 
 			}

@@ -4,6 +4,7 @@ using System.Collections;
 public class Enemy : MonoBehaviour
 {
 	public AbstractEnemy abstractenemy;
+	public ParticleSystem explode;
 	void Start ()
 	{
 		abstractenemy = new NormalAbstractEnemy ();

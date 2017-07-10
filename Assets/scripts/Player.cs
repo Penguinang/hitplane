@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class Player : NetworkBehaviour {
 
-	public float ReloadDelay = 5f;
+	float ReloadDelay = 3f;
 	public float Speedx = 4;
 	public float Speedy = 1;
 	public float Minx = -10.0f, Maxx = 10.0f;
@@ -18,9 +18,6 @@ public class Player : NetworkBehaviour {
 
 	[SyncVar(hook = "UpdateHealth")]
 	int health;
-//
-//	[SyncVar(hook = "UpdateClientHealth")]
-//	int clientHealth;
 
 	public AbstractPlayer abstractplayer;
 
@@ -33,20 +30,40 @@ public class Player : NetworkBehaviour {
 	}
 
 	void Start () {
-		abstractplayer = new PlayerA ();
+		Invoke ("InitAbstractPlayer", 0.2f);
+	}
+
+	void InitAbstractPlayer()
+	{
+		switch (gameObject.GetComponent<playercontroller> ().playerSelection) {
+		case 0:
+			abstractplayer = new PlayerA ();
+			break;
+		case 1:
+			abstractplayer = new PlayerB ();
+			break;
+		case 2:
+			abstractplayer = new PlayerC ();
+			break;
+		default:
+			print ("no suit type,give you a playerA");
+			abstractplayer = new PlayerA ();
+			break;
+		}
 		abstractplayer.Init ();
+		ReloadDelay = abstractplayer.reloadDelay;
 	}
 
 	void Update () {
 		//如果使用接口，就要将Health放在抽象类里面，也就是Player的成员的成员
 		//如果想保持完全同步，就要蒋Health写在Player里面，作为Player的成员，使用Attribute[syncvar]
-		if(isServer)
-			health = abstractplayer.health;			
-		//此处本应将所有删除权限交给本机或交给服务器，但是似乎是客户端向服务器发送的有点慢，导致客户端玩家死后，服务器玩家无法消失
-		/*if (isLocalPlayer)*/if(isServer){		 	
-			if (abstractplayer.health <= 0)
-				Invoke ("die",0);
-		}
+		if (isServer)
+			if (abstractplayer != null) {
+				health = abstractplayer.health;
+			if (abstractplayer.health <= 0){
+				Invoke ("die",0);	//服务器向客户端同步health需要一些时间
+			}
+		}	
 	}
 	void die()
 	{
@@ -71,38 +88,26 @@ public class Player : NetworkBehaviour {
 	}
 	void OnTriggerEnter2D(Collider2D collider)
 	{
-//		if (collider.gameObject.tag == "enemybullet") 
-//		{
-//			Health -= 10;
-//			Destroy (collider.gameObject);
-//			if (Health <= 0)
-//				Destroy (this.gameObject);
-//		} 
-//		else if (collider.gameObject.tag == "enemybody") 
-//		{
-//			Health -= 20;
-//			if (Health <= 0)
-//				Destroy (this.gameObject);
-//
-//		}			
+
 	}
 
 	void UpdateScore(int score)
 	{
 		if(!isLocalPlayer)
-			GameObject.Find ("remotescore").GetComponent<Text> ().text = "Remote Score"+score;
+			GameObject.Find ("remotescore").GetComponent<Text> ().text = "Remote Score\n"+score;
 		else
-			GameObject.Find ("localscore").GetComponent<Text> ().text = "Local Score"+score;
+			GameObject.Find ("localscore").GetComponent<Text> ().text = "Local Score\n"+score;
 	}
 
 	void UpdateHealth(int health)
 	{
 		if (isLocalPlayer) {
-			GameObject.Find ("localhealth").GetComponent<Text> ().text = "LocalPlayer\n" + health;
+			GameObject.Find ("localhealth").GetComponent<Text> ().text = "LocalPlayer\n"+abstractplayer.maxHealth+"Max\n" + health;
+			GameObject.Find ("localhealthbar").GetComponent<Slider> ().value = (float)health / abstractplayer.maxHealth;
+		} else {
+			GameObject.Find ("remotehealth").GetComponent<Text> ().text = "RemotePlayer\n"+abstractplayer.maxHealth+"Max\n" + health;
+			GameObject.Find ("remotehealthbar").GetComponent<Slider> ().value = (float)health / abstractplayer.maxHealth;
 		}
-		else 
-			GameObject.Find ("remotehealth").GetComponent<Text> ().text = "RemotePlayer\n" + health;
-
 	}
 
 	public void getScore()

@@ -58,8 +58,7 @@
      <Compile Include="Assets\scripts\Enemy.cs" />
      <Compile Include="Assets\scripts\EnemyController.cs" />
      <Compile Include="Assets\scripts\enemymanager.cs" />
-     <Compile Include="Assets\scripts\lanmode.cs" />
-     <Compile Include="Assets\scripts\oneplayer.cs" />
+     <Compile Include="Assets\scripts\particleautodestroy.cs" />
      <Compile Include="Assets\scripts\Player.cs" />
      <Compile Include="Assets\scripts\playercontroller.cs" />
      <Compile Include="Assets\scripts\PlayerFactory.cs" />
