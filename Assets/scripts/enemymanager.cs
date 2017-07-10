@@ -23,6 +23,11 @@ public class enemymanager :  NetworkBehaviour{
 		InvokeRepeating ("spawnEnemy",1,spawnTime);
 	}
 
+	public void Inactivate()
+	{
+		CancelInvoke ();
+	}
+
 	void spawnEnemy()
 	{
 		GameObject enemy = Instantiate (enemyPrefab,new Vector3(Random.Range(-6.4f,6.4f),enemySpawnLocation.position.y,enemySpawnLocation.position.z),enemySpawnLocation.rotation);

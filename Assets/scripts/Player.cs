@@ -31,6 +31,8 @@ public class Player : NetworkBehaviour {
 
 	void Start () {
 		Invoke ("InitAbstractPlayer", 0.2f);
+		PlayerFactory factory = new PlayerFactory ();
+
 	}
 
 	void InitAbstractPlayer()

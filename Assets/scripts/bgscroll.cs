@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class bgscroll : MonoBehaviour {
-	public float maxy = 0;
-	public float miny = 0;
-	public float speed = 0.001f;
-	private Vector3 startposition;
+	public GameObject current;
+	public GameObject next;
+
+	public float speed = 0.0001f;
 	void Start () {
-		startposition = transform.position;
+		
 	}
 
 	void Update () {
-		float delta = miny+Mathf.Repeat (speed*Time.time, maxy - miny);
-		transform.position = startposition + delta * Vector3.down;
-		//transform.position = new Vector3 (transform.position.x,miny+Mathf.Repeat (-0.1f*Time.time, maxy-miny),0);
+	}
+
+	void FixedUpdate()
+	{
+		transform.position += new Vector3(0,-1*speed,0);
+		if (next.transform.position.y<0.01) {
+			current.transform.position = new Vector3 (0, 10, 0)+current.transform.position;
+			GameObject temp = current;
+			current = next;
+			next = temp;
+		}
 	}
 }
